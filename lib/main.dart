@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         ),
         home: MyHomePage(),
       ),
@@ -26,10 +26,14 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
+  var slot1 = WordPair.random();
+  var slot2 = WordPair.random();
+  var slot3 = WordPair.random();
 
   void getNext() {
-    current = WordPair.random();
+    slot1 = WordPair.random();
+    slot2 = WordPair.random();
+    slot3 = WordPair.random();
     notifyListeners();
   }
 }
@@ -38,20 +42,30 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var pair = appState.current;
 
     return Scaffold(
-      body: Column(
-        children: [
-          Text('A random idea:'),
-          BigCard(pair: pair),
-          ElevatedButton(
-            onPressed: () {
-              appState.getNext();
-            },
-            child: Text('Next'),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 180),
+        child: Center(
+          child: Column(
+            children: [
+              Text('A random idea:'),
+              Row(
+                children: [
+                  BigCard(pair: appState.slot1),
+                  BigCard(pair: appState.slot2),
+                  BigCard(pair: appState.slot3),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  appState.getNext();
+                },
+                child: Text('Next'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -67,10 +81,19 @@ class BigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.displaySmall!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
     return Card(
+      color: theme.colorScheme.primary,
       child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(pair.asLowerCase),
+        padding: const EdgeInsets.all(5),
+        child: Text(
+          pair.asLowerCase,
+          style: style,
+        ),
       ),
     );
   }
